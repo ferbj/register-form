@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Registrar</div>
                 <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" id='registro' action='{{url('/registrar')}}'>
+                    <form class="form-horizontal" role="form" method="POST" id='registro' >
                         {{ csrf_field() }}
                         @include('errors.errors')
                         <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -51,7 +51,9 @@
                                 @endif
                             </div>
                         </div>
-
+                       <div id='msg'>
+                           
+                       </div> 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
@@ -69,4 +71,24 @@
         </div>
     </div>
 </div>
+@endsection
+@section('js')
+<script>
+    $('#registro').on('submit',function(e){
+    e.preventDefault();
+    $.ajax({
+        url:'{{ url('/registrar')}}',
+        type:'POST',
+        data: $('#registro').serializeArray(),
+        success:function(res){
+            if(res.message=='success'){
+                $('#msg').html('<div class="alert alert-success"><strong>'+res.message+'</strong>');
+            }
+            else{
+                $('#msg').html('<div class="alert alert-danger"><strong>'+res.message+'</strong>');
+            }
+        }
+    });
+});
+</script>
 @endsection
